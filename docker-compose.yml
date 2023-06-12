@@ -8,11 +8,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    ports:
-      - "6432:5432"
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: test_db
 
   app:
     build: .
@@ -28,6 +26,23 @@ services:
     depends_on:
       - pgdb
 
+  celery-worker:
+    restart: always
+    build:
+      context: .
+    command: celery -A config worker -l INFO
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - ./.env
+    depends_on:
+      - pgdb
+      - redis
+      - app
+
+  redis:
+    image: redis
+    container_name: redis
 
 volumes:
   postgres_data:

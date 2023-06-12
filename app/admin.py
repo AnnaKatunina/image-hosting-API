@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from app.models import Plan, Account, Image, Thumbnail
+from app.models import Plan, Account, Image, Thumbnail, ImageVersion
 
 
 class ThumbnailInline(admin.TabularInline):
@@ -19,7 +19,18 @@ class AccountAdmin(admin.ModelAdmin):
     list_display = ('user', 'plan')
 
 
+class ImageVersionInline(admin.TabularInline):
+    model = ImageVersion
+    extra = 0
+    verbose_name = 'version'
+    verbose_name_plural = 'versions'
+
+
+class ImageAdmin(admin.ModelAdmin):
+    inlines = (ImageVersionInline,)
+
+
 admin.site.register(Plan, PlanAdmin)
 admin.site.register(Account, AccountAdmin)
-admin.site.register(Image, admin.ModelAdmin)
+admin.site.register(Image, ImageAdmin)
 admin.site.register(Thumbnail, admin.ModelAdmin)

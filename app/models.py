@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from app.tasks import create_image_versions
+
 
 class TimeStampedMixin(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -41,6 +43,12 @@ class Plan(TimeStampedMixin, UUIDMixin):
 class Account(TimeStampedMixin, UUIDMixin):
     user = models.OneToOneField(User, verbose_name='User', on_delete=models.CASCADE, related_name='account')
     plan = models.ForeignKey(Plan, verbose_name='Plan', on_delete=models.CASCADE, related_name='accounts')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        images = self.images.all()
+        for image in images:
+            create_image_versions.delay(image.id)
 
     def __str__(self):
         return self.user.username
