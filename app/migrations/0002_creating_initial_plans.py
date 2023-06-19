@@ -14,19 +14,19 @@ def create_initial_plans(apps, schema_editor):
     plan_premium = Plan.objects.create(
         name='Premium',
         description="""A link to a thumbnail that's 200px in height
-        A link to a thumbnail that's 400px in height
-        A link to the originally uploaded image""",
-        is_original_size=True
+       A link to a thumbnail that's 400px in height
+       A link to the originally uploaded image""",
+        is_presence_original_image=True
     )
     plan_premium.thumbnails.add(thumbnail_200)
     plan_premium.thumbnails.add(thumbnail_400)
     plan_enterprise = Plan.objects.create(
         name='Enterprise',
         description="""A link to a thumbnail that's 200px in height
-        A link to a thumbnail that's 400px in height
-        A link to the originally uploaded image
-        Ability to fetch a link for a previously uploaded image that expires after a number of seconds (user can specify any number between 300 and 30000)""",
-        is_original_size=True,
+       A link to a thumbnail that's 400px in height
+       A link to the originally uploaded image
+       Ability to fetch a link for a previously uploaded image that expires after a number of seconds (user can specify any number between 300 and 30000)""",
+        is_presence_original_image=True,
         is_expiring_link=True
     )
     plan_enterprise.thumbnails.add(thumbnail_200)

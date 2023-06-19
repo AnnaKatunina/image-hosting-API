@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from app.models import Plan, Account, Image, Thumbnail, ImageVersion
+from app.models import Plan, Account, Image, Thumbnail, ImageVersion, ExpiringLink
 
 
 class ThumbnailInline(admin.TabularInline):
@@ -11,7 +11,7 @@ class ThumbnailInline(admin.TabularInline):
 
 
 class PlanAdmin(admin.ModelAdmin):
-    fields = ('name', 'description', 'is_original_size', 'is_expiring_link',)
+    fields = ('name', 'description', 'is_presence_original_image', 'is_expiring_link',)
     inlines = (ThumbnailInline,)
 
 
@@ -26,8 +26,15 @@ class ImageVersionInline(admin.TabularInline):
     verbose_name_plural = 'versions'
 
 
+class ExpiringLinkInline(admin.TabularInline):
+    model = ExpiringLink
+    extra = 0
+    verbose_name = 'expiring link'
+    verbose_name_plural = 'expiring links'
+
+
 class ImageAdmin(admin.ModelAdmin):
-    inlines = (ImageVersionInline,)
+    inlines = (ImageVersionInline, ExpiringLinkInline)
 
 
 admin.site.register(Plan, PlanAdmin)
